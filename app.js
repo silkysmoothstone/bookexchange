@@ -41,17 +41,17 @@ app.get("/books/new", function (req, res) {
 
 //Create Route - Add new book to the database
 app.post("/books", function(req, res) {
-    //get data from form and add to campgrounds database
+    //get data from form and add to books collection
     var name = req.body.name;
     var image = req.body.image;
     var desc = req.body.description;
     var newBook = {name: name, image: image, description: desc};
-    //create a new campground and save to database
+    //create a new book and save to database
     Book.create(newBook, function(err, book) {
         if(err) {
             console.log(err);
         } else {
-            //redirect back to campgrounds
+            //redirect back to books
             res.redirect("/books");
         }
     });
@@ -59,12 +59,12 @@ app.post("/books", function(req, res) {
 
 //Show Route - Show information about 1 book
 app.get("/books/:id", function (req, res) {
-    //find the campground with provided id
+    //find the book with provided id
     Book.findById(req.params.id, function (err, foundBook) {
         if(err) {
             console.log(err);
         } else {
-            //render show template with that campground
+            //render show template with that book
             res.render("show", {title: foundBook.name.toString(), book: foundBook});
         }
     });
