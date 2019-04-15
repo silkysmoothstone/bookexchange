@@ -1,24 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <title>CalUBookExchange - <%= title %></title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Make site responsive on mobile/tablet -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CalU Book Exchange</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link href="/stylesheets/main.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-default">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
             <a class="navbar-brand" href="/">CalU Book Exchange</a>
         </div>
-        <div class="collapse navbar-collapse">
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="<%= typeof page !== 'undefined' && page === 'books' ? 'active' : '' %>"><a href="/books">Home</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" action="/books" method="GET">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="search" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/">Login</a></li>
-                <li><a href="/">Signup</a></li>
-                <li><a href="/">Logout</a></li>
+                <% if(!currentUser){ %>
+                    <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Login</a></li>
+                    <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">Sign Up</a></li>
+                <% } else { %>
+                    <li><a href="/users/<%= currentUser.id %>">Signed In As: <%= currentUser.username %></a></li>
+                    <li><a href="/logout">Logout</a></li>
+                <% } %>
             </ul>
         </div>
     </div>
 </nav>
+<div class="container">
+    <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger" role="alert">
+            <%= error %>
+        </div>
+    <% } %>
+    <% if(success && success.length > 0) { %>
+        <div class="alert alert-success" role="alert">
+            <%= success %>
+        </div>
+    <% } %>
+</div>
+<div class="container">

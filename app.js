@@ -2,78 +2,52 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var mongoose = require("mongoose");
+var flash = require("connect-flash");
+var passport = require("passport");
+var LocalStrategy = require("passport-local");
+var methodOveride = require("method-override");
+var Book = require("./models/book");
+//var Comment = require("./models/comment");
+var User = require("./models/user");
+//var seedDB = require("./seeds");
 
-mongoose.connect("mongodb://localhost:27017/exchange_v2", {useNewUrlParser: true});
+//requiring routes
+//var feedbackRoutes = require("./routes/feedback");
+var bookRoutes = require("./routes/books");
+var indexRoutes = require("./routes/index");
+
+mongoose.connect("mongodb://localhost:27017/exchange_final", {useNewUrlParser: true});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname + "/public"));
+app.use(methodOveride("_method"));
+app.use(flash());
+//seedDB();
 
-var bookSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
+//PASSPORT CONFIGURATION
+app.use(require("express-session")({
+    secret: "This is the biggest secret ever!",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next) {
+    res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
+    next();
 });
 
-var Book = mongoose.model("Book", bookSchema);
+app.use(indexRoutes);
+//app.use("/books/:id/comments", feedbackRoutes);
+app.use("/books", bookRoutes);
 
-//===================
-//BEGINNING OF ROUTES
-//===================
-app.get("/", function (req, res) {
-    res.render("landing", {title: "Home"});
-});
-
-//Index Route
-app.get("/books", function (req, res) {
-    //get all books
-    Book.find({}, function (err, allBooks) {
-       if(err) {
-           console.log(err);
-       } else {
-           res.render("index", {title: "All Books", books: allBooks});
-       }
-    });
-});
-
-//New Route - Show form to create a new book
-app.get("/books/new", function (req, res) {
-   res.render("new", {title: "Add New Book"});
-});
-
-//Create Route - Add new book to the database
-app.post("/books", function(req, res) {
-    //get data from form and add to books collection
-    var name = req.body.name;
-    var image = req.body.image;
-    var desc = req.body.description;
-    var newBook = {name: name, image: image, description: desc};
-    //create a new book and save to database
-    Book.create(newBook, function(err, book) {
-        if(err) {
-            console.log(err);
-        } else {
-            //redirect back to books
-            res.redirect("/books");
-        }
-    });
-});
-
-//Show Route - Show information about 1 book
-app.get("/books/:id", function (req, res) {
-    //find the book with provided id
-    Book.findById(req.params.id, function (err, foundBook) {
-        if(err) {
-            console.log(err);
-        } else {
-            //render show template with that book
-            res.render("show", {title: foundBook.name.toString(), book: foundBook});
-        }
-    });
-});
-
-
-//=============
-//END OF ROUTES
-//=============
 app.listen(3000, function () {
-    console.log("CalUBookExchange server running....");
+    console.log("The CalU Book Exchange server has started");
 });

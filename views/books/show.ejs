@@ -1,0 +1,34 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-md-3">
+        <p class="lead">CalU Book Exchange</p>
+        <div class="list-group">
+            <li class="list-group-item active">Item 1</li>
+            <li class="list-group-item">Item 2</li>
+            <li class="list-group-item">Item 3</li>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="thumbnail">
+            <img class="image-responsive" src="<%= book.image %>">
+            <div class="caption-full">
+                <h4 class="pull-right">$<%= book.price %></h4>
+                <h4><a><%= book.name %></a></h4>
+                <p><%= book.description %></p>
+                <p><%= book.isbn %></p>
+                <p>
+                    <em>Submitted by: <a href="/users/<%= book.author.id %>"><%= book.author.username %></a></em>
+                </p>
+                <% if(currentUser && book.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+                    <a class="btn btn-xs btn-warning" href="/books/<%= book._id %>/edit">Edit Book</a>
+                    <form id="delete-form" action="/campgrounds/<%= book._id %>?_method=DELETE" method="POST">
+                        <button class="btn btn-xs btn-danger">Delete Book</button>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <!--well goes here-->
+</div>
+<% include ../partials/footer %>
