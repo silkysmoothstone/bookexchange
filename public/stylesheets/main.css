@@ -13,3 +13,7 @@
 #delete-form {
     display: inline;
 }
+
+#allBooks img{
+    max-height: 250px;
+}

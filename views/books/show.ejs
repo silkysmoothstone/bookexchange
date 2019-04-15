@@ -14,11 +14,11 @@
             <div class="caption-full">
                 <h4 class="pull-right">Price: $<%= book.price %></h4>
                 <h4><strong>Title: </strong><%= book.name %></h4>
-                <p><em>Description: </em><%= book.description %></p>
-                <p><em>ISBN: </em><%= book.isbn %></p>
                 <p>
-                    <em>Submitted by: <a href="/users/<%= book.author.id %>"><%= book.author.username %></a></em>
+                    <em>Sold by: <a href="/users/<%= book.author.id %>"><%= book.author.username %></a></em>
                 </p>
+                <p><em>ISBN: </em><%= book.isbn %></p>
+                <p><em>Description: </em><%= book.description %></p>
                 <% if(currentUser && book.author.id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
                     <a class="btn btn-xs btn-warning" href="/books/<%= book._id %>/edit">Edit Book</a>
                     <form id="delete-form" action="/campgrounds/<%= book._id %>?_method=DELETE" method="POST">
@@ -26,7 +26,7 @@
                     </form>
                 <% } %>
                 <% if((currentUser && !book.author.id.equals(currentUser._id))) { %>
-                    <a class="btn btn-xs btn-warning" href="#">Buy Book</a>
+                    <a class="btn btn-success" href="#">Buy Book</a>
                 <% } %>
             </div>
         </div>
