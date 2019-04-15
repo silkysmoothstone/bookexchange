@@ -16,24 +16,35 @@ router.get("/register", function(req, res) {
 
 //handle sign up logic
 router.post("/register", function(req, res) {
-    var newUser = new User({
-        username: req.body.username,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName
-    });
-    //correct adminCode supplied?
-    if(req.body.adminCode === 'secretcode123') {
-        newUser.isAdmin = true;
-    }
-    User.register(newUser, req.body.password, function(err, user) {
-        if(err) {
-            return res.render("register", {"error": err.message});
+    if(!(req.body.password === req.body.password2)) {
+        req.flash("error", "Passwords do not match! Please re-enter information");
+        res.redirect("/register");
+    } else {
+        var pattern = new RegExp("^[a-zA-Z0-9._%+-]+@calu+\.edu$");
+        if (pattern.test(req.body.username)) {
+            var newUser = new User({
+                username: req.body.username,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName
+            });
+            //correct adminCode supplied?
+            if (req.body.adminCode === 'secretcode123') {
+                newUser.isAdmin = true;
+            }
+            User.register(newUser, req.body.password, function (err, user) {
+                if (err) {
+                    return res.render("register", {"error": err.message});
+                }
+                passport.authenticate("local")(req, res, function () {
+                    req.flash("success", "Welcome to CalU Book Exchange, " + user.username + "!");
+                    res.redirect("/books");
+                });
+            });
+        } else {
+            req.flash("error", "You must register with a @calu.edu email address!");
+            res.redirect("/register");
         }
-        passport.authenticate("local")(req, res, function() {
-            req.flash("success", "Welcome to CalU Book Exchange, " + user.username + "!");
-            res.redirect("/books");
-        });
-    });
+    }
 });
 
 //show sign in form

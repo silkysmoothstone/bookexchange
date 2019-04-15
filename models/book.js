@@ -6,6 +6,7 @@ var bookSchema = new mongoose.Schema({
     image: String,
     description: String,
     isbn: String,
+    sold: {type: Boolean, default: false},
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,

@@ -1,22 +1,21 @@
 <% include ../partials/header %>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 col-md-offset-1">
         <p class="lead">CalU Book Exchange</p>
         <div class="list-group">
-            <li class="list-group-item active">Item 1</li>
-            <li class="list-group-item">Item 2</li>
-            <li class="list-group-item">Item 3</li>
+            <li class="list-group-item"><a href="/books">Back to Books</a></li>
+            <li class="list-group-item"><a href="/users/<%= book.author.id %>">Seller Feedback</a></li>
         </div>
     </div>
-    <div class="col-md-9">
+    <div class="col-md-5 col-md-offset-2">
         <div class="thumbnail">
             <img class="image-responsive" src="<%= book.image %>">
             <div class="caption-full">
-                <h4 class="pull-right">$<%= book.price %></h4>
-                <h4><a><%= book.name %></a></h4>
-                <p><%= book.description %></p>
-                <p><%= book.isbn %></p>
+                <h4 class="pull-right">Price: $<%= book.price %></h4>
+                <h4><strong>Title: </strong><%= book.name %></h4>
+                <p><em>Description: </em><%= book.description %></p>
+                <p><em>ISBN: </em><%= book.isbn %></p>
                 <p>
                     <em>Submitted by: <a href="/users/<%= book.author.id %>"><%= book.author.username %></a></em>
                 </p>
@@ -25,6 +24,9 @@
                     <form id="delete-form" action="/campgrounds/<%= book._id %>?_method=DELETE" method="POST">
                         <button class="btn btn-xs btn-danger">Delete Book</button>
                     </form>
+                <% } %>
+                <% if((currentUser && !book.author.id.equals(currentUser._id))) { %>
+                    <a class="btn btn-xs btn-warning" href="#">Buy Book</a>
                 <% } %>
             </div>
         </div>

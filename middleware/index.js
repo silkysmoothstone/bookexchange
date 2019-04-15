@@ -15,7 +15,7 @@ middlewareObj.checkBookOwnerShip = function(req, res, next) {
                 //does user own the book
                 if(foundBook.author.id.equals(req.user._id) || req.user.isAdmin) {
                     //yes
-                    req.flash("success", "Book has been deleted!")
+                    //req.flash("success", "Book has been deleted!");
                     next();
                 } else {
                     //no

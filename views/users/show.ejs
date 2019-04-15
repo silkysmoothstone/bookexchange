@@ -4,9 +4,12 @@
     <div class="col-md-4">
         <h1><%= user.firstName + " " + user.lastName %></h1>
         <div class="thumbnail">
-            <img src="" alt="user profile image">
             <div class="caption"><a href="mailto:<%= user.username %>"><%= user.username %></a></div>
         </div>
+        <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+            <a href="#" class="btn btn-xs btn-warning">Edit Account Information</a>
+            <a href="#" class="btn btn-xs btn-danger">Delete Account</a>
+        <% } %>
         <h3>Books <%= user.firstName %> is selling</h3>
         <ul>
             <% books.forEach(function(book) { %>
@@ -16,7 +19,6 @@
     </div>
     <div class="col-md-8">
         <h3><%= user.firstName %>'s Books:</h3>
-
     </div>
 </div>
 

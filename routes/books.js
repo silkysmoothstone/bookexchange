@@ -9,13 +9,13 @@ router.get("/", function(req, res) {
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
         Book.find({ "name": regex }, function(err, allBooks) {
             if(err) {
-                req.flash("error", "Error in search terms!")
+                req.flash("error", "Error in search terms!");
             } else {
                 if(allBooks.length > 0) {
                     res.render("books/index", {books: allBooks, currentUser: req.user, page: 'books'});
                 } else {
                     req.flash("error", "No books match that search");
-                    res.redirect("back");
+                    res.redirect("/books");
                 }
             }
         });
@@ -61,7 +61,7 @@ router.get("/new", middleWare.isLoggedIn, function(req, res) {
 });
 
 //SHOW - Shows more info about one book
-router.get("/:id", function(req, res) {
+router.get("/:id", middleWare.isLoggedIn, function(req, res) {
     //find the book of the id
     Book.findById(req.params.id, function(err, foundBook) {
         if(err) {
@@ -89,7 +89,7 @@ router.put("/:id", middleWare.checkBookOwnerShip, function(req, res) {
         } else {
             //redirect to show page
             req.flash("success", "Book has been updated!");
-            res.redirect("/book/" + req.params.id);
+            res.redirect("/books/" + req.params.id);
         }
     });
 });
@@ -99,10 +99,10 @@ router.delete("/:id", middleWare.checkBookOwnerShip, function(req, res) {
     Book.findByIdAndRemove(req.params.id, function(err) {
         if(err) {
             req.flash("error", "Unable to delete the book");
-            res.redirect("/book");
+            res.redirect("/books");
         }
         req.flash("success", "Book deleted");
-        res.redirect("/book");
+        res.redirect("/books");
     });
 });
 
