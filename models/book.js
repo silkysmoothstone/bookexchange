@@ -4,6 +4,7 @@ var bookSchema = new mongoose.Schema({
     name: String,
     price: String,
     image: String,
+    imageId: String,
     description: String,
     isbn: String,
     sold: {type: Boolean, default: false},
