@@ -13,7 +13,8 @@ var User = require("./models/user");
 //var seedDB = require("./seeds");
 
 //requiring routes
-//var feedbackRoutes = require("./routes/feedback");
+var transactionRoutes = require("./routes/transactions");
+var feedbackRoutes = require("./routes/feedback");
 var bookRoutes = require("./routes/books");
 var indexRoutes = require("./routes/index");
 
@@ -46,7 +47,8 @@ app.use(function(req, res, next) {
 });
 
 app.use(indexRoutes);
-//app.use("/books/:id/comments", feedbackRoutes);
+app.use("/transaction", transactionRoutes);
+app.use("/users/:id/feedback", feedbackRoutes);
 app.use("/books", bookRoutes);
 
 app.listen(3000, function () {

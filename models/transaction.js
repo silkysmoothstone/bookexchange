@@ -1,7 +1,6 @@
 var mongoose = require("mongoose");
 
-var feedbackSchema = new mongoose.Schema({
-    text: String,
+var transactionSchema = new mongoose.Schema({
     buyer: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +21,11 @@ var feedbackSchema = new mongoose.Schema({
             ref: "Book"
         },
         name: String
+    },
+    feedbackExists: {
+        type: Boolean,
+        default: false
     }
 });
 
-module.exports = mongoose.model("Feedback", feedbackSchema);
+module.exports = mongoose.model("Transaction", transactionSchema);

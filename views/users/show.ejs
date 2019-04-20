@@ -1,26 +1,55 @@
 <% include ../partials/header %>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="thumbnail">
+<div class="row well">
+    <div class="col-md-12">
+        <div class="row">
             <h2><%= user.firstName + " " + user.lastName %>'s Profile</h2>
-            <div class="caption"><a href="mailto:<%= user.username %>"><%= user.username %></a></div>
-        </div>
-        <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
-            <a href="#" class="btn btn-xs btn-warning">Edit Account Information</a>
-            <a href="#" class="btn btn-xs btn-danger">Delete Account</a>
-        <% } %>
-        <div class="col-md-8">
-            <h4><%= user.firstName %>'s Feedback:</h4>
+            <p><a href="mailto:<%= user.username %>"><%= user.username %></a></p>
+            <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+                <a href="#" class="btn btn-xs btn-warning">Edit Account Information</a>
+                <a href="#" class="btn btn-xs btn-danger">Delete Account</a>
+            <% } %>
         </div>
     </div>
-    <h3>Books <%= user.firstName %> is selling</h3>
-    <ul>
-        <% books.forEach(function(book) { %>
-            <li><a href="/books/<%= book.id %>"><%= book.name %></a></li>
+</div>
+<div class="row thumbnail">
+    <div class="col-md-4">
+        <h4><%= user.firstName %>'s Feedback:</h4>
+        <ul>
+        <% user.feedback.forEach(function (feedback) { %>
+                <li><strong><%= feedback.author.username %></strong>: <%= feedback.text %></li>
         <% }); %>
-    </ul>
-
+        </ul>
+    </div>
+    <div class="col-md-8">
+        <h4>Books <%= user.firstName %> is Selling:</h4>
+        <table class="table table-striped">
+            <% books.forEach(function(book) { %>
+                <% if(!book.sold) { %>
+                    <tr>
+                        <td><a href="/books/<%= book.id %>"><%= book.name %></a></td>
+                    </tr>
+                <% } %>
+            <% }); %>
+        </table>
+        <% if(currentUser && user._id.equals(currentUser._id) || currentUser && currentUser.isAdmin) { %>
+            <table class="table table-striped">
+                <h4>Transactions:</h4>
+                <% user.transactions.forEach(function(transaction) { %>
+                <tr>
+                    <td>Buyer: <a href="<%= transaction.buyer.id %>"><%= transaction.buyer.username %></a></td>
+                    <td>Seller: <a href="<%= transaction.seller.id %>"><%= transaction.seller.username %></a></td>
+                    <td>Book: <a href="../books/<%= transaction.book.id %>"><%= transaction.book.name %></a></td>
+                    <td>
+                        <% if (currentUser && currentUser._id.equals(transaction.buyer.id)) { %>
+                            <a class="btn btn-xs btn-success" href="../users/<%= transaction.seller.id %>/feedback">Leave Feedback</a>
+                        <% } %>
+                    </td>
+                </tr>
+                <% }); %>
+            </table>
+        <% } %>
+    </div>
 </div>
 
 <% include ../partials/footer %>

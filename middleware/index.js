@@ -7,7 +7,7 @@ var middlewareObj = {};
 
 middlewareObj.checkBookOwnerShip = function(req, res, next) {
     if(req.isAuthenticated()) {
-        //does user own campground
+        //does user own book
         Book.findById(req.params.id, function(err, foundBook) {
             if(err) {
                 res.redirect("back");

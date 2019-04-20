@@ -1,0 +1,16 @@
+<% include ../partials/header %>
+<div class="row">
+    <div class="col-md-4 col-md-offset-4">
+        <h2 style="text-align: center">Leave Feedback for: <%= user.username %></h2>
+            <form action="/users/<%= user._id %>/feedback" method="POST">
+                <div class="form-group">
+                    <input class="form-control" type="text" placeholder="text" name="feedback[text]">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Leave Feedback</button>
+                </div>
+            </form>
+        <a href="/users/<%= currentUser._id %>">Go Back</a>
+    </div>
+</div>
+<% include ../partials/footer %>

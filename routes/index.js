@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
 var Book = require("../models/book");
+var middleWare = require("../middleware");
 
 //root route
 router.get("/", function(req, res) {
@@ -69,19 +70,21 @@ router.get("/logout", function(req, res) {
 });
 
 //user profile route
-router.get("/users/:id", function(req, res) {
-    User.findById(req.params.id, function(err, foundUser) {
+router.get("/users/:id", middleWare.isLoggedIn, function(req, res) {
+    User.findById(req.params.id).populate("transactions").populate("feedback").exec(function(err, foundUser) {
         if(err) {
             req.flash("error", "User profile does not exit.");
             res.redirect("/");
+        } else {
+            Book.find().where('author.id').equals(foundUser._id).exec(function (err, books) {
+                if (err) {
+                    req.flash("error", "User profile does not exit.");
+                    res.redirect("/");
+                } else {
+                    res.render("users/show", {user: foundUser, books: books});
+                }
+            });
         }
-        Book.find().where('author.id').equals(foundUser._id).exec(function(err, books) {
-            if(err) {
-                req.flash("error", "User profile does not exit.");
-                res.redirect("/");
-            }
-            res.render("users/show", {user: foundUser, books: books});
-        });
     });
 });
 

@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Book = require("../models/book");
 var middleWare = require("../middleware");
+
 var multer = require('multer');
 var storage = multer.diskStorage({
     filename: function(req, file, callback) {
@@ -52,6 +53,11 @@ router.get("/", function(req, res) {
     }
 });
 
+//NEW - Show form to create new book
+router.get("/new", middleWare.isLoggedIn, function(req, res) {
+    res.render("books/new");
+});
+
 //CREATE - add new book to database
 router.post("/", middleWare.isLoggedIn, upload.single('image'), function(req, res) {
     //get data from form and add to books database
@@ -95,11 +101,6 @@ router.post("/", middleWare.isLoggedIn, upload.single('image'), function(req, re
     //         res.redirect("/books");
     //     }
     // });
-});
-
-//NEW - Show form to create new book
-router.get("/new", middleWare.isLoggedIn, function(req, res) {
-    res.render("books/new");
 });
 
 //SHOW - Shows more info about one book
@@ -172,6 +173,8 @@ router.delete("/:id", middleWare.checkBookOwnerShip, function(req, res) {
         }
     });
 });
+
+
 
 function escapeRegex(text) {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");

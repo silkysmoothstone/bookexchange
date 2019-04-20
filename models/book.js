@@ -7,7 +7,10 @@ var bookSchema = new mongoose.Schema({
     imageId: String,
     description: String,
     isbn: String,
-    sold: {type: Boolean, default: false},
+    sold: {
+        type: Boolean,
+        default: false
+    },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
@@ -15,13 +18,6 @@ var bookSchema = new mongoose.Schema({
         },
         username: String
     }
-    // },
-    // comments: [
-    //     {
-    //         type: mongoose.Schema.Types.ObjectId,
-    //         ref: "Comment"
-    //     }
-    // ]
 });
 
 module.exports = mongoose.model("Book", bookSchema);

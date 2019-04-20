@@ -6,7 +6,22 @@ var UserSchema = new mongoose.Schema({
     password: String,
     firstName: String,
     lastName: String,
-    isAdmin: {type: Boolean, default: false},
+    isAdmin: {
+        type: Boolean,
+        default: false
+    },
+    transactions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Transaction"
+        }
+    ],
+    feedback: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Feedback"
+        }
+    ]
 });
 
 UserSchema.plugin(passportLocalMongoose);
