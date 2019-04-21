@@ -27,17 +27,17 @@ cloudinary.config({
 
 //INDEX Route - Show all books
 router.get("/", function(req, res) {
-    if(req.query.search) {
+    if(req.query.search) { //if they attempt to search for something
         const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Book.find({ "name": regex }, function(err, allBooks) {
+        Book.find({ "name": regex }, function(err, allBooks) { 
             if(err) {
-                req.flash("error", "Error in search terms!");
+                req.flash("error", "Error in search terms!"); //error caused by search terms
             } else {
-                if(allBooks.length > 0) {
-                    res.render("books/index", {books: allBooks, currentUser: req.user, page: 'books'});
+                if(allBooks.length > 0) { //checks if we have books that match search results
+                    res.render("books/index", {books: allBooks, currentUser: req.user, page: 'books'}); //shows all books by search results
                 } else {
-                    req.flash("error", "No books match that search");
-                    res.redirect("/books");
+                    req.flash("error", "No books match that search"); //message if no books found by search results
+                    res.redirect("/books"); //redirect to books page
                 }
             }
         });
@@ -45,9 +45,9 @@ router.get("/", function(req, res) {
         //get all books from DB
         Book.find({}, function (err, allBooks) {
             if(err) {
-                console.log(err);
+                console.log(err); //something wrong happened when trying to get listing from database
             } else {
-                res.render("books/index", {books: allBooks, currentUser: req.user, page: 'books'});
+                res.render("books/index", {books: allBooks, currentUser: req.user, page: 'books'}); //render the page with all the books
             }
         });
     }
@@ -55,7 +55,7 @@ router.get("/", function(req, res) {
 
 //NEW - Show form to create new book
 router.get("/new", middleWare.isLoggedIn, function(req, res) {
-    res.render("books/new");
+    res.render("books/new"); //renders create book page
 });
 
 //CREATE - add new book to database
@@ -63,8 +63,8 @@ router.post("/", middleWare.isLoggedIn, upload.single('image'), function(req, re
     //get data from form and add to books database
     cloudinary.v2.uploader.upload(req.file.path, {format: 'jpg', image_metadata: true}, function(err, result) {
         if(err) {
-            req.flash("error", err.message);
-            return res.redirect("back");
+            req.flash("error", err.message); //display error message
+            return res.redirect("back"); //goes back if error
         }
         // add cloudinary url for the image to the book object under image property
         req.body.book.image = result.secure_url;
@@ -108,17 +108,17 @@ router.get("/:id", middleWare.isLoggedIn, function(req, res) {
     //find the book of the id
     Book.findById(req.params.id, function(err, foundBook) {
         if(err) {
-            console.log(err);
+            console.log(err); //couldn't find book by id
         } else {
-            res.render("books/show", {book: foundBook});
+            res.render("books/show", {book: foundBook}); //found book and renders more info page
         }
     });
 });
 
 //Edit route - show form to edit a book
 router.get("/:id/edit", middleWare.checkBookOwnerShip, function(req, res) {
-    Book.findById(req.params.id, function(err, foundBook) {
-        res.render("books/edit", {book: foundBook});
+    Book.findById(req.params.id, function(err, foundBook) { //search for book by id
+        res.render("books/edit", {book: foundBook}); //renders editing listing page
     });
 });
 
@@ -127,8 +127,8 @@ router.put("/:id", middleWare.checkBookOwnerShip, upload.single('image'), functi
     //find and update the correct book
     Book.findById(req.params.id, async function(err, book) {
         if(err) {
-            req.flash("error", "Error finding the book!");
-            res.redirect("/books");
+            req.flash("error", "Error finding the book!"); //could not find book
+            res.redirect("/books"); //redirect back to books page
         } else {
             if(req.file) {
                 try {
@@ -164,12 +164,12 @@ router.delete("/:id", middleWare.checkBookOwnerShip, function(req, res) {
         try {
             //wait until the image is deleted before continuing
             await cloudinary.v2.uploader.destroy(book.imageId);
-            book.remove();
-            req.flash("success", "Book deleted");
-            res.redirect("/books");
+            book.remove(); //remove that book
+            req.flash("success", "Book deleted"); //it worked display message
+            res.redirect("/books");  //redirect to books
         } catch (err) {
-            req.flash("error", "Unable to delete the book");
-            return res.redirect("/books");
+            req.flash("error", "Unable to delete the book"); //error message if book could not be deleted
+            return res.redirect("/books"); //redirect to books page
         }
     });
 });
