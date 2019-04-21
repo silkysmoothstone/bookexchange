@@ -1,16 +1,16 @@
-var Book = require("../models/book");
-var Feeback = require("../models/feedback");
+var Book = require("../models/book");   //book models
+var Feeback = require("../models/feedback"); //feedback models 
 
 
 //all the middleware goes here
 var middlewareObj = {};
 
-middlewareObj.checkBookOwnerShip = function(req, res, next) {
+middlewareObj.checkBookOwnerShip = function(req, res, next) {  
     if(req.isAuthenticated()) {
         //does user own book
-        Book.findById(req.params.id, function(err, foundBook) {
+        Book.findById(req.params.id, function(err, foundBook) { 
             if(err) {
-                res.redirect("back");
+                res.redirect("back"); //redirect
             } else {
                 //does user own the book
                 if(foundBook.author.id.equals(req.user._id) || req.user.isAdmin) {
@@ -54,12 +54,12 @@ middlewareObj.checkFeedbackOwnership = function(req, res, next) {
     }
 }
 
-middlewareObj.isLoggedIn = function (req, res, next) {
+middlewareObj.isLoggedIn = function (req, res, next) { //checks if user is logged in and returns error if not
     if(req.isAuthenticated()) {
         return next();
     }
     req.flash("error", "You need to be logged in to do that!");
-    res.redirect("/login");
+    res.redirect("/login"); //redirect to login page
 }
 
 module.exports = middlewareObj;
