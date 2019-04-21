@@ -9,7 +9,7 @@ var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
  service: 'gmail',
  auth: {
-        user: 'calubook@gmail.com',
+        user: 'calubookex@gmail.com',
         pass: 'bookitwithcal'
     }
 });
@@ -63,7 +63,7 @@ router.post("/:id/buy", middleWare.isLoggedIn, function (req, res) {
     });
     //email seller of transaction
     const mailOptions = {
-  from: 'calubook@gmail.com', // just a email address to use
+  from: 'calubookex@gmail.com', // just a email address to use
   to: 'seller.username', // reciever name may need changed idk if this will work and can't test it without you
   subject: 'DONOTREPLY Your book has sold', // subject to seller
   html: '<p>Your html here</p>'// idk if we really need anything here if not marked for deletion
