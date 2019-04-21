@@ -56,8 +56,8 @@ router.post("/:id/buy", middleWare.isLoggedIn, function (req, res) {
                   req.flash("error", "Error finding user during transaction");
                   return res.redirect("/books");
               }
-              seller.transactions.push(transaction);
-              seller.save();
+              seller.transactions.push(transaction); //pushes seller
+              seller.save(); //saves it
            });
        }
     });
